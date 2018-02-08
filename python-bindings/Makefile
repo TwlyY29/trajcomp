@@ -1,9 +1,12 @@
 MODULE = trajcomp.so
 
 BOOST_PATH = /usr/local/lib
+BOOST_INCLUDE_PATH = /usr/local/include/boost/
 TRAJCOMP_PATH = /usr/include/
+PYTHON_HEADER_PATH = /usr/include/python3.5
+PYTHON_MODULE_PATH = /usr/local/lib/python3.5/dist-packages/
 
-INC_PATHS=-Isrc/ -I/usr/local/include/boost/ -I$(BOOST_PATH) -I/usr/include/python3.5 -I$(TRAJCOMP_PATH)
+INC_PATHS=-Isrc/ -I$(BOOST_INCLUDE_PATH) -I$(BOOST_PATH) -I$(PYTHON_HEADER_PATH) -I$(TRAJCOMP_PATH)
 
 CPP = g++
 CPP_FILES = $(wildcard src/*.cpp)
@@ -21,7 +24,7 @@ LIBS =-Wl,--start-group -L$(BOOST_PATH) -ldl -Wl,-rpath,$(BOOST_PATH) -lboost_py
 all: python3
 
 python3: mkdirs $(MODULE)
-	sudo cp $(MODULE) /usr/local/lib/python3.5/dist-packages/
+	cp $(MODULE) $(PYTHON_MODULE_PATH)
 
 $(MODULE): $(OBJ_FILES)
 	$(CPP) -shared $(LDFLAGS) $(OBJ_FILES) $(LIBS) -o $(MODULE)
