@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+
+# -*- coding: utf-8 -*-
+
+import trajcomp
+import unittest
+
+BF_M = 50
+BF_D = 2
+
+class TestBF(unittest.TestCase):
+    
+  def test_inserts(self):
+    bf = trajcomp.BloomFilter(BF_D,BF_M)
+    bf.add('asd')
+    bf.add('bla')
+    bf.add('fasel')
+    self.assertTrue(bf.contains('bla'))
+    self.assertTrue(bf.foz() < 1.0)
+
+  def test_subset(self):
+    bf = trajcomp.BloomFilter(BF_D,BF_M)
+    bf2 = trajcomp.BloomFilter(BF_D,BF_M)
+    bf.add('asd')
+    bf2.add('asd')
+    bf.add('blafasel')
+    self.assertFalse(bf.subset(bf2))
+    self.assertTrue(bf2.subset(bf))
+    
+  def test_pickle(self):
+    import pickle
+    bf = trajcomp.BloomFilter(BF_D,BF_M)
+    bf.add('asd')
+    bf.add('bla')
+    bf.add('fasel')
+    with open('bftest', 'wb') as bft:
+      pickle.dump(bf, bft)
+    del(bf)
+    bf = None
+    with open('bftest', 'rb') as bft:
+      bf = pickle.load(bft)
+    self.assertTrue(bf is not None)
+    self.assertTrue(bf.contains('fasel'))
+    self.assertFalse(bf.contains('gurk'))
+
+if __name__ == '__main__':
+  unittest.main()
+
+
+
