@@ -99,7 +99,10 @@ public:
 	  for (size_t i =0; i < filter.size(); i++)
 	    if (filter[i] == 1 || b.filter[i] == 1)
 	      dot ++;
-	  // dot 
+	  //cout << "dot == " << dot << endl;
+	  //cout << "fsize/d == " << fsize/d << endl;
+	  //cout << "dot / (double) fsize == " << dot / (double) fsize << endl;
+	  //cout << "-log(1- dot / (double) fsize) == " << -log(1- dot / (double) fsize) << endl;
 	  return -log(1- dot / (double) fsize)*fsize/d;
 	  
   }

@@ -92,6 +92,7 @@ BOOST_PYTHON_MODULE(MODULE_NAME)
     .def("eIntersect", &tp::BF::eIntersect)
     .def("contains", &tp::BF::contains_byval)
     .def("add", &tp::BF::add_byval)
+    .def_readonly("filter", &tp::BF::filter)
     .def_pickle(tp::bf_pickle_suite());
     
 }

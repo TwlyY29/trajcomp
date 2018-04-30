@@ -3,8 +3,8 @@ MODULE = trajcomp.so
 BOOST_PATH = /usr/local/lib
 BOOST_INCLUDE_PATH = /usr/local/include/boost/
 TRAJCOMP_PATH = /usr/include/
-PYTHON_HEADER_PATH = /usr/include/python3.5
-PYTHON_MODULE_PATH = /usr/local/lib/python3.5/dist-packages/
+PYTHON_HEADER_PATH = /usr/include/$(PYVERS)
+PYTHON_MODULE_PATH = /usr/local/lib/$(PYVERS)/dist-packages/
 
 INC_PATHS=-Isrc/ -I$(BOOST_INCLUDE_PATH) -I$(BOOST_PATH) -I$(PYTHON_HEADER_PATH) -I$(TRAJCOMP_PATH)
 
@@ -14,16 +14,28 @@ OBJ_FILES = $(addprefix build/,$(notdir $(CPP_FILES:.cpp=.o)))
 DEP_FILES = $(addprefix build/,$(notdir $(CPP_FILES:.cpp=.d)))
 
 #CFLAGS = -g -c -Wall -std=c++11 -pthread $(INC_PATHS)
-CFLAGS=-O3 -fno-inline -Wall -g -fPIC -std=c++11 $(INC_PATHS)
+#CFLAGS=-O3 -fno-inline -Wall -g -fPIC -std=c++11 $(INC_PATHS)
+CFLAGS=-Ofast -Wall -fPIC -std=c++11 $(INC_PATHS)
 #LDFLAGS = -DNDEBUG -g -fwrapv -O2 -Wall -g -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -fPIC 
 LDFLAGS=
-LIBS =-Wl,--start-group -L$(BOOST_PATH) -ldl -Wl,-rpath,$(BOOST_PATH) -lboost_python3 -lboost_serialization -Wl,--end-group
+LIBS =-Wl,--start-group -L$(BOOST_PATH) -ldl -Wl,-rpath,$(BOOST_PATH) $(PYBOOSTLIB) -lboost_serialization -Wl,--end-group
 
 
 .PHONY: all
 all: python3
 
-python3: mkdirs $(MODULE)
+installtrajcomp:
+	cp -r ../r-package/trajcomp/src/trajcomp $(TRAJCOMP_PATH)
+
+python3: PYVERS=python3.6
+python3: PYBOOSTLIBs=-lboost_python3
+python3: build
+
+python2: PYVERS=python2.7
+python2: PYBOOSTLIB=-lboost_python
+python2: build
+
+build: mkdirs $(MODULE)
 	cp $(MODULE) $(PYTHON_MODULE_PATH)
 
 $(MODULE): $(OBJ_FILES)
