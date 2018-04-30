@@ -2,11 +2,11 @@ MODULE = trajcomp.so
 
 BOOST_PATH = /usr/local/lib
 BOOST_INCLUDE_PATH = /usr/local/include/boost/
-TRAJCOMP_PATH = /usr/include/
+TRAJCOMP_PREFIX = /usr/include/
 PYTHON_HEADER_PATH = /usr/include/$(PYVERS)
 PYTHON_MODULE_PATH = /usr/local/lib/$(PYVERS)/dist-packages/
 
-INC_PATHS=-Isrc/ -I$(BOOST_INCLUDE_PATH) -I$(BOOST_PATH) -I$(PYTHON_HEADER_PATH) -I$(TRAJCOMP_PATH)
+INC_PATHS=-Isrc/ -I$(BOOST_INCLUDE_PATH) -I$(BOOST_PATH) -I$(PYTHON_HEADER_PATH) -I$(TRAJCOMP_PREFIX)
 
 CPP = g++
 CPP_FILES = $(wildcard src/*.cpp)
@@ -22,12 +22,13 @@ LIBS =-Wl,--start-group -L$(BOOST_PATH) -ldl -Wl,-rpath,$(BOOST_PATH) $(PYBOOSTL
 
 
 .PHONY: all
-all: python3
+all: installtrajcomp python3
 
 installtrajcomp:
-	cp -r ../r-package/trajcomp/src/trajcomp $(TRAJCOMP_PATH)
+	mkdir -p $(TRAJCOMP_PREFIX)/trajcomp
+	rsync -rtp --delete ../r-package/trajcomp/src/trajcomp/ $(TRAJCOMP_PREFIX)/trajcomp
 
-python3: PYVERS=python3.6
+python3: PYVERS=python3.5
 python3: PYBOOSTLIBs=-lboost_python3
 python3: build
 
@@ -36,7 +37,7 @@ python2: PYBOOSTLIB=-lboost_python
 python2: build
 
 build: mkdirs $(MODULE)
-	cp $(MODULE) $(PYTHON_MODULE_PATH)
+	mv $(MODULE) $(PYTHON_MODULE_PATH)
 
 $(MODULE): $(OBJ_FILES)
 	$(CPP) -shared $(LDFLAGS) $(OBJ_FILES) $(LIBS) -o $(MODULE)
