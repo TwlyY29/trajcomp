@@ -1,7 +1,7 @@
 MODULE = trajcomp.so
 
-BOOST_PATH = /usr/local/lib
-BOOST_INCLUDE_PATH = /usr/local/include/boost/
+BOOST_PATH = /usr/lib
+BOOST_INCLUDE_PATH = /usr/include/boost/
 TRAJCOMP_PREFIX = /usr/include/
 PYTHON_HEADER_PATH = /usr/include/$(PYVERS)
 PYTHON_MODULE_PATH = /usr/local/lib/$(PYVERS)/dist-packages/
