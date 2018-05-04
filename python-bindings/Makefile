@@ -29,7 +29,7 @@ installtrajcomp:
 	rsync -rtp --delete ../r-package/trajcomp/src/trajcomp/ $(TRAJCOMP_PREFIX)/trajcomp
 
 python3: PYVERS=python3.6
-python3: PYBOOSTLIBs=-lboost_python3
+python3: PYBOOSTLIB=-lboost_python3
 python3: build
 
 python2: PYVERS=python2.7
@@ -51,5 +51,5 @@ mkdirs:
 	mkdir -p build
 
 clean:
-	rm build -Rf
+	rm -Rf build
 	rm -f $(MODULE)
